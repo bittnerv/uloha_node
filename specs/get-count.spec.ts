@@ -39,26 +39,20 @@ describe('GetCount', () => {
             await apiLayer.run();
         });
         after(() => apiLayer.stop());
-        afterEach(async () => {
-            actionHandler.reset();
-        });
+        afterEach(() => actionHandler.reset());
 
         it('should return status OK', async () => {
-            await requester.sendRequest('get', '/count')
-                .then((response) => {
-                    expect(response).to.have.property('statusCode', OK);
-                });
+            await expect(sendGetCountRequest()).to.eventually
+                .have.property('statusCode', OK);
         });
 
         it('should return number value', async () => {
-            await requester.sendRequest('get', '/count')
-                .then((response) => {
-                    expect(response).to.have.deep.property('body', {value: result});
-                });
+            await expect(sendGetCountRequest()).to.eventually
+                .have.deep.property('body', {value: result});
         });
 
         it('should produce GetCount action', async () => {
-            await requester.sendRequest('get', '/count');
+            await sendGetCountRequest();
             expect(actionHandler.handledActions).to.have.lengthOf(1);
             expect(actionHandler.getLastHandledAction()).to.be.instanceOf(GetCount);
         });
@@ -71,20 +65,18 @@ describe('GetCount', () => {
             });
 
             it('should return status INTERNAL SERVER ERROR', async () => {
-                await requester.sendRequest('get', '/count')
-                    .then((response) => {
-                        expect(response).to.have.property('statusCode', INTERNAL_SERVER_ERROR);
-                    });
+                await expect(sendGetCountRequest()).to.eventually
+                    .have.property('statusCode', INTERNAL_SERVER_ERROR);
             });
 
             it('should return error description', async () => {
-                const description = `${error.name}: ${error.message}`;
-
-                await requester.sendRequest('get', '/count')
-                    .then((response) => {
-                        expect(response).to.have.deep.property('body', {error: description});
-                    });
+                await expect(sendGetCountRequest()).to.eventually
+                    .have.deep.property('body', {error: `${error.name}: ${error.message}`});
             });
         });
+
+        async function sendGetCountRequest(): Promise<unknown> {
+            return requester.sendRequest('get', '/count');
+        }
     });
 });

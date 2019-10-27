@@ -64,26 +64,20 @@ describe('TrackCount', () => {
             await apiLayer.run();
         });
         after(() => apiLayer.stop());
-        afterEach(async () => {
-            actionHandler.reset();
-        });
+        afterEach(() => actionHandler.reset());
 
         it('should return status NO CONTENT', async () => {
-            await requester.sendRequest('post', '/track', {body})
-                .then((response) => {
-                    expect(response).to.have.property('statusCode', NO_CONTENT);
-                });
+            await expect(sendTrackCountRequest()).to.eventually
+                .have.property('statusCode', NO_CONTENT);
         });
 
         it('should return nothing', async () => {
-            await requester.sendRequest('post', '/track', {body})
-                .then((response) => {
-                    expect(response).not.to.have.property('body');
-                });
+            await expect(sendTrackCountRequest()).to.eventually
+                .not.to.have.property('body');
         });
 
         it('should produce TrackCount action', async () => {
-            await requester.sendRequest('post', '/track', {body});
+            await sendTrackCountRequest();
             expect(actionHandler.handledActions).to.have.lengthOf(1);
             expect(actionHandler.getLastHandledAction())
                 .to.be.instanceOf(TrackCount).and
@@ -98,20 +92,18 @@ describe('TrackCount', () => {
             });
 
             it('should return status INTERNAL SERVER ERROR', async () => {
-                await requester.sendRequest('post', '/track', {body})
-                    .then((response) => {
-                        expect(response).to.have.property('statusCode', INTERNAL_SERVER_ERROR);
-                    });
+                await expect(sendTrackCountRequest()).to.eventually
+                    .have.property('statusCode', INTERNAL_SERVER_ERROR);
             });
 
             it('should return error description', async () => {
-                const description = `${error.name}: ${error.message}`;
-
-                await requester.sendRequest('post', '/track', {body})
-                    .then((response) => {
-                        expect(response).to.have.deep.property('body', {error: description});
-                    });
+                await expect(sendTrackCountRequest()).to.eventually
+                    .have.deep.property('body', {error: `${error.name}: ${error.message}`});
             });
         });
+
+        async function sendTrackCountRequest(): Promise<unknown> {
+            return requester.sendRequest('post', '/track', {body});
+        }
     });
 });
