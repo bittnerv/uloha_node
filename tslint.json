@@ -1,0 +1,68 @@
+{
+  "extends": "tslint:latest",
+  "rules": {
+    "align": [
+      true,
+      "parameters",
+      "arguments",
+      "statements",
+      "members",
+      "elements"
+    ],
+    "array-type": [
+      true,
+      "generic"
+    ],
+    "await-promise": [
+      true,
+      "PromisedAssertion"
+    ],
+    "deprecation": true,
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "max-classes-per-file": [true, 5],
+    "max-line-length": [
+      true,
+      {
+        "limit": 120
+      }
+    ],
+    "newline-before-return": true,
+    "no-conditional-assignment": true,
+    "no-console": false,
+    "no-irregular-whitespace": true,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-floating-promises": true,
+    "no-magic-numbers": true,
+    "no-parameter-reassignment": true,
+    "object-literal-sort-keys": [
+      true,
+      "match-declaration-order"
+    ],
+    "only-arrow-functions": [
+      true,
+      "allow-declarations"
+    ],
+    "prefer-readonly": true,
+    "prefer-template": true,
+    "promise-function-async": true,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "triple-equals": true,
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ]
+  }
+}

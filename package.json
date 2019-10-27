@@ -1,17 +1,61 @@
 {
   "name": "uloha",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main,js",
+  "version": "2.0.0",
+  "description": "Uloha node",
+  "types": "dist/app/index.d.ts",
+  "main": "dist/app/index.js",
   "scripts": {
-    "test": "mocha"
+    "start": "node dist/app/index.js",
+    "start-devel": "nodemon --config nodemon.json app/index.ts",
+    "build": "rimraf dist && tsc",
+    "test": "mocha --opts ./test/mocha.opts",
+    "test-watch": "npm run test -- --watch",
+    "test-coverage": "nyc npm run test",
+    "posttest-coverage": "rimraf .nyc_output",
+    "lint": "tslint --project tsconfig.json --config tslint.json",
+    "lint-fix": "npm run lint -- --fix",
+    "check": "npm run build && npm run test && npm run lint",
+    "postcheck": "rimraf dist",
+    "prepublishOnly": "npm run build"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bittnerv/uloha_node.git"
+  },
+  "author": "Vladimír Bittner",
   "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "4.2.3",
+    "@types/chai-as-promised": "7.1.2",
+    "@types/lodash": "4.14.144",
+    "@types/mocha": "5.2.7",
+    "@types/node": "10.0.3",
+    "@types/redis": "2.8.14",
+    "@types/request-promise-native": "1.0.14",
+    "@types/restify": "5.0.7",
+    "@types/sinon": "7.5.0",
+    "@types/sinon-chai": "3.2.3",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "mocha": "6.2.2",
+    "nodemon": "1.19.4",
+    "nyc": "14.1.1",
+    "rimraf": "3.0.0",
+    "sinon": "7.5.0",
+    "sinon-chai": "3.3.0",
+    "tslint": "5.20.0",
+    "ts-node": "8.4.1",
+    "typescript": "3.6.4"
+  },
   "dependencies": {
-    "async": "^2.0.0-rc.4",
-    "express": "^4.13.4",
-    "redis": "^2.6.0-2",
-    "request": "^2.72.0"
+    "http-status-codes": "1.4.0",
+    "lodash": "4.17.15",
+    "redis": "2.8.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "restify": "8.4.0"
+  },
+  "engines": {
+    "node": ">=10.x"
   }
 }

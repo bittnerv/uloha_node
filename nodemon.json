@@ -1,0 +1,17 @@
+{
+  "watch": [
+    "app",
+    "lib",
+    "src"
+  ],
+  "ext": "ts",
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "ignore": [
+    "**/*.spec.ts"
+  ],
+  "events": {
+    "restart": "echo \"[nodemon] restarting app due to change of $FILENAME\""
+  }
+}

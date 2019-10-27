@@ -1,0 +1,22 @@
+{
+  "include": [
+    "libs/**/*.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "app/index.ts",
+    "**/node_modules/**",
+    "**/*.d.ts",
+    "**/*.spec.ts"
+  ],
+  "extension": [
+    ".ts"
+  ],
+  "report-dir": "./coverage/report",
+  "temp-directory": "./coverage/tmp",
+  "reporter": [
+    "text-summary",
+    "html"
+  ],
+  "all": true
+}
