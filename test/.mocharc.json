@@ -6,6 +6,7 @@
   "ui": "bdd",
   "file": "./test/setup.ts",
   "ëxit": true,
+  "watch-extensions": "ts",
   "spec": [
     "libs/**/*.spec.ts",
     "src/**/*.spec.ts",

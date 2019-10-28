@@ -11,6 +11,7 @@ export class App {
             await Promise.all(this.runnables.map((runnable) => runnable.run()));
         } catch (error) {
             console.info(`App error - ${error.name}: ${error.message}`);
+
             throw error;
         }
     }

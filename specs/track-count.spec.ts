@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {INTERNAL_SERVER_ERROR, NO_CONTENT} from 'http-status-codes';
-import {Runnable} from '../src/common/app';
 import {TrackCount, TrackCountData} from '../src/tracking/track-count';
 import {TestActionHandler} from '../test/mocks/test-action-handler';
 import {createTestApiLayer} from '../test/mocks/test-api-layer';
@@ -52,17 +51,13 @@ describe('TrackCount', () => {
         }
     });
 
-    describe.skip('when send POST /track request', () => {
+    describe('when send POST /track request', () => {
         const body = {key: 'value', count: 5};
         const requester = createApiRequester();
-        let actionHandler: TestActionHandler;
-        let apiLayer: Runnable;
+        const actionHandler = new TestActionHandler();
+        const apiLayer = createTestApiLayer(actionHandler);
 
-        before(async () => {
-            actionHandler = new TestActionHandler();
-            apiLayer = createTestApiLayer(actionHandler);
-            await apiLayer.run();
-        });
+        before(() => apiLayer.run());
         after(() => apiLayer.stop());
         afterEach(() => actionHandler.reset());
 
@@ -87,9 +82,7 @@ describe('TrackCount', () => {
         describe('given action is handled with error', () => {
             const error = new Error('test error');
 
-            beforeEach(() => {
-                actionHandler.throwError = error;
-            });
+            beforeEach(() => (actionHandler.throwError = error));
 
             it('should return status INTERNAL SERVER ERROR', async () => {
                 await expect(sendTrackCountRequest()).to.eventually

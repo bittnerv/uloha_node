@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {INTERNAL_SERVER_ERROR, OK} from 'http-status-codes';
-import {Runnable} from '../src/common/app';
 import {GetCount} from '../src/tracking/get-count';
 import {TestActionHandler} from '../test/mocks/test-action-handler';
 import {createTestApiLayer} from '../test/mocks/test-api-layer';
@@ -27,17 +26,13 @@ describe('GetCount', () => {
         }
     });
 
-    describe.skip('when send GET /count request', () => {
+    describe('when send GET /count request', () => {
         const result = 5;
         const requester = createApiRequester();
-        let actionHandler: TestActionHandler;
-        let apiLayer: Runnable;
+        const actionHandler = new TestActionHandler(result);
+        const apiLayer = createTestApiLayer(actionHandler);
 
-        before(async () => {
-            actionHandler = new TestActionHandler(result);
-            apiLayer = createTestApiLayer(actionHandler);
-            await apiLayer.run();
-        });
+        before(() => apiLayer.run());
         after(() => apiLayer.stop());
         afterEach(() => actionHandler.reset());
 
@@ -60,9 +55,7 @@ describe('GetCount', () => {
         describe('given action is handled with error', () => {
             const error = new Error('test error');
 
-            beforeEach(() => {
-                actionHandler.throwError = error;
-            });
+            beforeEach(() => (actionHandler.throwError = error));
 
             it('should return status INTERNAL SERVER ERROR', async () => {
                 await expect(sendGetCountRequest()).to.eventually
