@@ -5,7 +5,7 @@ import {RestifyHttpResponse} from './restify-http-response';
 import {translateToRestifyMethod} from './restify-methods-translator';
 
 const DEFAULT_REQUEST_TIMEOUT_IN_SECONDS = 120;
-const doNothing = () => undefined;
+const MS_IN_SECOND = 1000;
 
 export class RestifyHttpServer implements HttpServer {
     private readonly restifyServer: Server;
@@ -13,7 +13,6 @@ export class RestifyHttpServer implements HttpServer {
 
     public constructor(private readonly config: HttpServerConfig) {
         this.restifyServer = this.createRestifyServer();
-        this.handleUncaughtExceptions();
     }
 
     public addRoute(route: HttpRoute, handler: HttpHandler): void {
@@ -24,60 +23,43 @@ export class RestifyHttpServer implements HttpServer {
 
     public async listen(): Promise<void> {
         if (!this.initializingPromise) {
-            this.initializingPromise = new Promise<void>((resolve, reject) => {
-                this.startListening(resolve, reject);
-            });
+            this.initializingPromise = this.startListening()
+                .catch((error) => this.handleListeningError(error));
         }
 
         return this.initializingPromise;
     }
 
-    public isListening(): boolean {
-        return this.restifyServer.server.listening;
-    }
-
-    public async stopListening(): Promise<void> {
+    public async close(): Promise<void> {
         if (this.isListening()) {
             await new Promise((resolve) => this.restifyServer.close(resolve));
         }
     }
 
-    protected createRequestHandlerAdapter(handler: HttpHandler): RequestHandler {
+    private createRequestHandlerAdapter(handler: HttpHandler): RequestHandler {
         return async (request: Request, response: Response): Promise<void> => {
             return handler.handle(new RestifyHttpRequest(request), new RestifyHttpResponse(response));
         };
     }
 
-    private startListening(resolve: () => void, reject: (error: Error) => void): void {
+    private isListening(): boolean {
+        return this.restifyServer.server.listening;
+    }
+
+    private async startListening(): Promise<void> {
         const {port, host} = this.config;
 
-        if (this.isListening()) {
-            return resolve();
-        }
-
-        this.rejectWhenErrorIsEmitted(reject);
-        this.resolveWhenListeningIsEmitted(resolve);
-
-        this.restifyServer.listen(port, host, (error: Error) => {
-            if (error) {
-                return this.rejectListening(reject, error);
-            }
+        return new Promise<void>((resolve, reject) => {
+            this.restifyServer.on('listening', resolve);
+            this.restifyServer.on('error', reject);
+            this.restifyServer.listen(port, host);
         });
     }
 
-    private rejectListening(reject: (error: Error) => void, error: Error) {
+    private handleListeningError(error: Error): never {
         this.initializingPromise = undefined;
-        reject(error);
-    }
 
-    private resolveWhenListeningIsEmitted(resolve: () => void) {
-        this.restifyServer.on('listening', resolve);
-    }
-
-    private rejectWhenErrorIsEmitted(reject: (error: Error) => void) {
-        this.restifyServer.on('error', (error) => {
-            this.rejectListening(reject, error);
-        });
+        throw error;
     }
 
     private createRestifyServer(): Server {
@@ -87,27 +69,20 @@ export class RestifyHttpServer implements HttpServer {
         restifyServer.use(plugins.fullResponse());
         restifyServer.use(plugins.queryParser());
         restifyServer.use(plugins.bodyParser({multiples: true}));
-
-        this.setRequestHandlerTimeout(restifyServer);
+        restifyServer.on('uncaughtException', uncaughtExceptionHandler);
+        this.setRequestTimeout(restifyServer);
 
         return restifyServer;
     }
 
-    private setRequestHandlerTimeout(restifyServer: Server) {
-        const msInSecond = 1000;
-        const timeoutInMs = DEFAULT_REQUEST_TIMEOUT_IN_SECONDS * msInSecond;
+    private setRequestTimeout(restifyServer: Server) {
+        const timeoutInMs = DEFAULT_REQUEST_TIMEOUT_IN_SECONDS * MS_IN_SECOND;
 
-        restifyServer.server.setTimeout(timeoutInMs, doNothing);
+        restifyServer.server.setTimeout(timeoutInMs, () => undefined);
     }
+}
 
-    private handleUncaughtExceptions(): void {
-        this.restifyServer.on('uncaughtException', this.uncaughtExceptionHandler);
-    }
-
-    private uncaughtExceptionHandler(_request: Request,
-                                     response: Response,
-                                     _route: Route,
-                                     _error: Error) {
-        response.send('Something is wrong, please try again later.');
-    }
+function uncaughtExceptionHandler(_request: Request, response: Response, _route: Route, error: Error) {
+    console.info(`RestifyHttpServer: ${error.name}: ${error.message}`);
+    response.send('Something is wrong, please try again later.');
 }

@@ -1,5 +1,11 @@
-import * as rp from 'request-promise-native';
+import * as request from 'request-promise-native';
 import {testConfig} from '../mocks/test-config';
+
+const requestPresets = {
+    json: true,
+    resolveWithFullResponse: true,
+    simple: false,
+};
 
 export interface RequesterConfig {
     host: string;
@@ -15,19 +21,18 @@ export class Requester {
     constructor(private readonly config: RequesterConfig) {
     }
 
-    public async sendRequest(method: string, path: string, data: RequestData = {}): Promise<rp.FullResponse> {
+    public async sendRequest(method: string, path: string, data: RequestData = {}): Promise<request.FullResponse> {
         const {host, port} = this.config;
-        const options: rp.OptionsWithUrl = {
+        const options: request.Options = {
+            baseUrl: `http://${host}:${port}`,
             body: data.body,
-            json: true,
             method,
             qs: data.query,
-            resolveWithFullResponse: true,
-            simple: false,
-            url: `http://${host}:${port}${path}`,
+            url: path,
+            ...requestPresets,
         };
 
-        return rp(options).promise();
+        return request(options).promise();
     }
 }
 

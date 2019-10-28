@@ -18,7 +18,7 @@ export class HttpApi<A, R> implements Api {
     }
 
     public async stop(): Promise<void> {
-        await this.httpServer.stopListening();
+        await this.httpServer.close();
     }
 
     private setupApi() {

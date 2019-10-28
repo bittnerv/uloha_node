@@ -9,6 +9,6 @@ export interface HttpServerConfig {
 
 export interface HttpServer {
     listen(): Promise<void>;
-    stopListening(): Promise<void>;
+    close(): Promise<void>;
     addRoute(route: HttpRoute, handler: HttpHandler): void;
 }

@@ -10,7 +10,7 @@ export class CounterStoreImpl implements CounterStore {
     }
 
     public async get(key: string): Promise<number> {
-        const result = this.redisStore.get(key);
+        const result = await this.redisStore.get(key);
 
         return Number(result);
     }

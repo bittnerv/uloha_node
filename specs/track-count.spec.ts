@@ -52,7 +52,7 @@ describe('TrackCount', () => {
         }
     });
 
-    describe('when send POST /track request', () => {
+    describe.skip('when send POST /track request', () => {
         const body = {key: 'value', count: 5};
         const requester = createApiRequester();
         let actionHandler: TestActionHandler;

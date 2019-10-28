@@ -1,0 +1,14 @@
+{
+  "require": "ts-node/register",
+  "cacheDirectory": "./ts-node",
+  "inlineDiffs": true,
+  "reporter": "spec",
+  "ui": "bdd",
+  "file": "./test/setup.ts",
+  "ëxit": true,
+  "spec": [
+    "libs/**/*.spec.ts",
+    "src/**/*.spec.ts",
+    "specs/**/*.spec.ts"
+  ]
+}
