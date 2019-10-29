@@ -9,7 +9,8 @@ export class HttpSimpleResponseAdapter implements HttpResponseAdapter<SimpleResu
 
     public async createErrorResponseData(error: Error): Promise<HttpResponseData> {
         const body = {
-            error: `${error.name}: ${error.message}`,
+            message: error.message,
+            name: error.name,
         };
 
         return {status: 500, body};

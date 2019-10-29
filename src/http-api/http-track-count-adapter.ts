@@ -1,6 +1,6 @@
 import {HttpActionAdapter} from '../../libs/http-api';
 import {HttpRequest} from '../../libs/http-api/http-server';
-import {AppAction} from '../common/app-action';
+import {AppAction} from '../common/app-interfaces';
 import {TrackCount} from '../tracking/track-count';
 
 export class HttpTrackCountAdapter implements HttpActionAdapter<AppAction<void>> {

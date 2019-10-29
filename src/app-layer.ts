@@ -1,5 +1,5 @@
 import {Action, Result} from './action';
-import {AppLayer} from './common/app-layer';
+import {AppLayer} from './common/app-interfaces';
 import {CounterStore} from './common/counter-store';
 import {FileLogger} from './common/file-logger';
 import {GetCount} from './tracking/get-count';
@@ -25,6 +25,6 @@ export class AppLayerImpl implements AppLayer<Action, Result> {
             return action.execute(store);
         }
 
-        throw new Error(`Unknown action ${action}`);
+        throw new Error(`Unsupported action ${action.constructor.name}`);
     }
 }

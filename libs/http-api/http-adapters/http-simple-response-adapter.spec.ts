@@ -20,7 +20,7 @@ describe('HttpSimpleResponseAdapter', () => {
 
             await expect(adapter.createErrorResponseData(error)).to.eventually
                 .deep.equal({
-                    body: {error: `${error.name}: ${error.message}`},
+                    body: {message: error.message, name: error.name},
                     status: INTERNAL_SERVER_ERROR,
                 });
         });

@@ -8,7 +8,8 @@ export class HttpEmptyResponseAdapter implements HttpResponseAdapter<void> {
 
     public async createErrorResponseData(error: Error): Promise<HttpResponseData> {
         const body = {
-            error: `${error.name}: ${error.message}`,
+            message: error.message,
+            name: error.name,
         };
 
         return {status: INTERNAL_SERVER_ERROR, body};

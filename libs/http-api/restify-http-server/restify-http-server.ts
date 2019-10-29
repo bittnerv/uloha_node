@@ -1,3 +1,4 @@
+import {INTERNAL_SERVER_ERROR, NOT_FOUND} from 'http-status-codes';
 import {createServer, plugins, Request, RequestHandler, Response, Route, Server} from 'restify';
 import {HttpHandler, HttpRoute, HttpServer, HttpServerConfig} from '../http-server';
 import {RestifyHttpRequest} from './restify-http-request';
@@ -70,6 +71,7 @@ export class RestifyHttpServer implements HttpServer {
         restifyServer.use(plugins.queryParser());
         restifyServer.use(plugins.bodyParser({multiples: true}));
         restifyServer.on('uncaughtException', uncaughtExceptionHandler);
+        restifyServer.on('NotFound', notFoundHandler);
         this.setRequestTimeout(restifyServer);
 
         return restifyServer;
@@ -82,7 +84,17 @@ export class RestifyHttpServer implements HttpServer {
     }
 }
 
+function notFoundHandler(request: Request, response: Response, _error: Error) {
+    response.send(NOT_FOUND, {
+        message: `${request.path()} does not exist`,
+        name: 'NotFound',
+    });
+}
+
 function uncaughtExceptionHandler(_request: Request, response: Response, _route: Route, error: Error) {
     console.info(`RestifyHttpServer: ${error.name}: ${error.message}`);
-    response.send('Something is wrong, please try again later.');
+    response.send(INTERNAL_SERVER_ERROR, {
+        message: 'Something is wrong, please try again later.',
+        name: 'Error',
+    });
 }

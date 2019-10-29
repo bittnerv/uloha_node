@@ -1,6 +1,6 @@
 import {httpAdapters, HttpApiDescriptor, HttpMethod} from '../../libs/http-api';
 import {Action, Result} from '../action';
-import {AppAction} from '../common/app-action';
+import {AppAction} from '../common/app-interfaces';
 import {HttpGetCountAdapter} from './http-get-count-adapter';
 import {HttpTrackCountAdapter} from './http-track-count-adapter';
 

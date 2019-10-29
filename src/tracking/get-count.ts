@@ -1,4 +1,4 @@
-import {AppAction} from '../common/app-action';
+import {AppAction} from '../common/app-interfaces';
 import {CounterStore} from '../common/counter-store';
 
 export class GetCount implements AppAction<number> {

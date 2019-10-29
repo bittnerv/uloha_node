@@ -1,5 +1,6 @@
 import {createClient, RedisClient} from 'redis';
-import {RedisStore, RedisStoreImpl} from './redis-store';
+import {RedisStore} from './redis-store';
+import {RedisStoreImpl} from './redis-store-impl';
 
 export interface RedisConfig {
     host?: string;

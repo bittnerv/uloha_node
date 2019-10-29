@@ -91,7 +91,7 @@ describe('TrackCount', () => {
 
             it('should return error description', async () => {
                 await expect(sendTrackCountRequest()).to.eventually
-                    .have.deep.property('body', {error: `${error.name}: ${error.message}`});
+                    .have.deep.property('body', {message: error.message, name: error.name});
             });
         });
 

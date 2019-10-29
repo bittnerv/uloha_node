@@ -1,4 +1,4 @@
-import {FileLogger} from '../../src/common/file-logger';
+import {FileLogger} from '../../src/common/file-logger/file-logger';
 
 export class TestLogger implements FileLogger {
     public readonly logs: Array<string> = [];

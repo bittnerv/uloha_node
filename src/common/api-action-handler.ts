@@ -1,7 +1,7 @@
 import {ActionHandler} from '../../libs/http-api';
-import {AppLayer} from '../common/app-layer';
+import {AppLayer} from './app-interfaces';
 
-export class ActionHandlerImpl<A, R> implements ActionHandler<A, R> {
+export class ApiActionHandler<A, R> implements ActionHandler<A, R> {
     constructor(private readonly appLayer: AppLayer<A, R>) {
     }
 

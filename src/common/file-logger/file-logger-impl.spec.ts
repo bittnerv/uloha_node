@@ -1,9 +1,10 @@
 import {expect} from 'chai';
 import * as fs from 'fs';
 import {SinonStub, stub} from 'sinon';
-import {FileLogger, FileLoggerImpl} from './file-logger';
+import {FileLogger} from './file-logger';
+import {FileLoggerImpl} from './file-logger-impl';
 
-describe('FileLogger', () => {
+describe('FileLoggerImpl', () => {
     const path = 'path/to/log';
     const text = 'test text';
     const callbackPosition = 2;

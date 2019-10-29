@@ -1,2 +1,3 @@
 export {RedisConfig, RedisConnector} from './redis-connector';
-export {RedisStore, RedisStoreImpl} from './redis-store';
+export {RedisStore} from './redis-store';
+export {RedisStoreImpl} from './redis-store-impl';

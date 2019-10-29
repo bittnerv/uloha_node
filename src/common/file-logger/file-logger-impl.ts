@@ -1,8 +1,5 @@
 import {appendFile} from 'fs';
-
-export interface FileLogger {
-    log(text: string): Promise<void>;
-}
+import {FileLogger} from './file-logger';
 
 export class FileLoggerImpl implements FileLogger {
     constructor(private readonly path: string) {

@@ -1,9 +1,5 @@
-import {RedisStore} from '../../libs/redis-store';
-
-export interface CounterStore {
-    get(key: string): Promise<number>;
-    increment(key: string, value: number): Promise<void>;
-}
+import {RedisStore} from '../../../libs/redis-store';
+import {CounterStore} from './counter-store';
 
 export class CounterStoreImpl implements CounterStore {
     constructor(private readonly redisStore: RedisStore) {
