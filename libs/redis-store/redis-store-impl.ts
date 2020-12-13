@@ -8,7 +8,7 @@ export class RedisStoreImpl implements RedisStore {
     public async get(key: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this.client.get(key, (error, value) => {
-                error ? reject(error) : resolve(value);
+                error ? reject(error) : resolve(value || '');
             });
         });
     }

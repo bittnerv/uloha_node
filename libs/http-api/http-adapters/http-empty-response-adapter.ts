@@ -1,9 +1,9 @@
-import {INTERNAL_SERVER_ERROR, NO_CONTENT} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {HttpResponseAdapter, HttpResponseData} from '../http-response-adapter';
 
 export class HttpEmptyResponseAdapter implements HttpResponseAdapter<void> {
     public async createResponseData(_: void): Promise<HttpResponseData> {
-        return {status: NO_CONTENT, body: {}};
+        return {status: StatusCodes.NO_CONTENT, body: {}};
     }
 
     public async createErrorResponseData(error: Error): Promise<HttpResponseData> {
@@ -12,6 +12,6 @@ export class HttpEmptyResponseAdapter implements HttpResponseAdapter<void> {
             name: error.name,
         };
 
-        return {status: INTERNAL_SERVER_ERROR, body};
+        return {status: StatusCodes.INTERNAL_SERVER_ERROR, body};
     }
 }

@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {INTERNAL_SERVER_ERROR, NO_CONTENT} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {HttpEmptyResponseAdapter} from './http-empty-response-adapter';
 
 describe('HttpEmptyResponseAdapter', () => {
@@ -8,7 +8,7 @@ describe('HttpEmptyResponseAdapter', () => {
     describe('when creating response data', () => {
         it('should return empty response', async () => {
             await expect(adapter.createResponseData()).to.eventually
-                .deep.equal({status: NO_CONTENT, body: {}});
+                .deep.equal({status: StatusCodes.NO_CONTENT, body: {}});
         });
     });
 
@@ -19,7 +19,7 @@ describe('HttpEmptyResponseAdapter', () => {
             await expect(adapter.createErrorResponseData(error)).to.eventually
                 .deep.equal({
                     body: {message: error.message, name: error.name},
-                    status: INTERNAL_SERVER_ERROR,
+                    status: StatusCodes.INTERNAL_SERVER_ERROR,
                 });
         });
     });

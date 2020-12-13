@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {NOT_FOUND} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {AppAction} from '../src/common/app-interfaces';
 import {TestActionHandler} from '../test/mocks/test-action-handler';
 import {createTestApiLayer} from '../test/mocks/test-api-layer';
@@ -36,7 +36,7 @@ describe('Common behavior', () => {
 
         it('should return status NOT FOUND', async () => {
             await expect(sendUnsupportedRequest()).to.eventually
-                .have.property('statusCode', NOT_FOUND);
+                .have.property('statusCode', StatusCodes.NOT_FOUND);
         });
 
         it('should return not found response', async () => {

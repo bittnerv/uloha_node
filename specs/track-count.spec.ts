@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {INTERNAL_SERVER_ERROR, NO_CONTENT} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {TrackCount, TrackCountData} from '../src/tracking/track-count';
 import {TestActionHandler} from '../test/mocks/test-action-handler';
 import {createTestApiLayer} from '../test/mocks/test-api-layer';
@@ -63,7 +63,7 @@ describe('TrackCount', () => {
 
         it('should return status NO CONTENT', async () => {
             await expect(sendTrackCountRequest()).to.eventually
-                .have.property('statusCode', NO_CONTENT);
+                .have.property('statusCode', StatusCodes.NO_CONTENT);
         });
 
         it('should return nothing', async () => {
@@ -86,7 +86,7 @@ describe('TrackCount', () => {
 
             it('should return status INTERNAL SERVER ERROR', async () => {
                 await expect(sendTrackCountRequest()).to.eventually
-                    .have.property('statusCode', INTERNAL_SERVER_ERROR);
+                    .have.property('statusCode', StatusCodes.INTERNAL_SERVER_ERROR);
             });
 
             it('should return error description', async () => {

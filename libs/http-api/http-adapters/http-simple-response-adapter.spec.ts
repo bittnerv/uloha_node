@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {INTERNAL_SERVER_ERROR, OK} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {HttpSimpleResponseAdapter} from './http-simple-response-adapter';
 
 describe('HttpSimpleResponseAdapter', () => {
@@ -10,7 +10,7 @@ describe('HttpSimpleResponseAdapter', () => {
             const value = 5;
 
             await expect(adapter.createResponseData(value)).to.eventually
-                .deep.equal({status: OK, body: {value}});
+                .deep.equal({status: StatusCodes.OK, body: {value}});
         });
     });
 
@@ -21,7 +21,7 @@ describe('HttpSimpleResponseAdapter', () => {
             await expect(adapter.createErrorResponseData(error)).to.eventually
                 .deep.equal({
                     body: {message: error.message, name: error.name},
-                    status: INTERNAL_SERVER_ERROR,
+                    status: StatusCodes.INTERNAL_SERVER_ERROR,
                 });
         });
     });

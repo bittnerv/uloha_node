@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {INTERNAL_SERVER_ERROR, OK} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {GetCount} from '../src/tracking/get-count';
 import {TestActionHandler} from '../test/mocks/test-action-handler';
 import {createTestApiLayer} from '../test/mocks/test-api-layer';
@@ -38,7 +38,7 @@ describe('GetCount', () => {
 
         it('should return status OK', async () => {
             await expect(sendGetCountRequest()).to.eventually
-                .have.property('statusCode', OK);
+                .have.property('statusCode', StatusCodes.OK);
         });
 
         it('should return number value', async () => {
@@ -59,7 +59,7 @@ describe('GetCount', () => {
 
             it('should return status INTERNAL SERVER ERROR', async () => {
                 await expect(sendGetCountRequest()).to.eventually
-                    .have.property('statusCode', INTERNAL_SERVER_ERROR);
+                    .have.property('statusCode', StatusCodes.INTERNAL_SERVER_ERROR);
             });
 
             it('should return error description', async () => {

@@ -1,4 +1,4 @@
-import {INTERNAL_SERVER_ERROR, NOT_FOUND} from 'http-status-codes';
+import {StatusCodes} from 'http-status-codes';
 import {createServer, plugins, Request, RequestHandler, Response, Route, Server} from 'restify';
 import {HttpHandler, HttpRoute, HttpServer, HttpServerConfig} from '../http-server';
 import {RestifyHttpRequest} from './restify-http-request';
@@ -33,7 +33,9 @@ export class RestifyHttpServer implements HttpServer {
 
     public async close(): Promise<void> {
         if (this.isListening()) {
-            await new Promise((resolve) => this.restifyServer.close(resolve));
+            await new Promise((resolve) =>
+                this.restifyServer.close(() => resolve(undefined))
+            );
         }
     }
 
@@ -69,7 +71,7 @@ export class RestifyHttpServer implements HttpServer {
 
         restifyServer.use(plugins.fullResponse());
         restifyServer.use(plugins.queryParser());
-        restifyServer.use(plugins.bodyParser({multiples: true}));
+        restifyServer.use(plugins.bodyParser());
         restifyServer.on('uncaughtException', uncaughtExceptionHandler);
         restifyServer.on('NotFound', notFoundHandler);
         this.setRequestTimeout(restifyServer);
@@ -85,15 +87,14 @@ export class RestifyHttpServer implements HttpServer {
 }
 
 function notFoundHandler(request: Request, response: Response, _error: Error) {
-    response.send(NOT_FOUND, {
+    response.send(StatusCodes.NOT_FOUND, {
         message: `${request.path()} does not exist`,
         name: 'NotFound',
     });
 }
 
-function uncaughtExceptionHandler(_request: Request, response: Response, _route: Route, error: Error) {
-    console.info(`RestifyHttpServer: ${error.name}: ${error.message}`);
-    response.send(INTERNAL_SERVER_ERROR, {
+function uncaughtExceptionHandler(_request: Request, response: Response, _route: Route, _error: Error) {
+    response.send(StatusCodes.INTERNAL_SERVER_ERROR, {
         message: 'Something is wrong, please try again later.',
         name: 'Error',
     });
